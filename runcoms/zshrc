@@ -12,19 +12,12 @@ fi
 
 # Customize to your needs...
 
-path=(
-	~/bin
-	/usr/local/bin
-	~/Code/ops-tools
-	$path
-)
-
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+if [[ -x /usr/libexec/java_home ]]; then
+  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+fi
 
 export PIP_REQUIRE_VIRTUALENV=true
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-
-export TOD_FILE_REPO=~/Development/dotfiles
 
 export EDITOR=vim
 
@@ -89,16 +82,15 @@ gitcleanup() {
 	for x in `git branch --merged origin/master | grep -v master`; do git branch -d $x; done;
 	for x in `git branch -r --merged origin/master | grep -v master | grep -v production | awk '{print(substr($1, 8))}'`; do git push origin :$x; done;
 }
-
 gitignoreconficted() {
 	echo git add $1 && git reset HEAD $1 || git checkout $1;
 }
 
-venv_activate() {
-	deactivate &> /dev/null;
-	source "$1"/bin/activate;
-}
+if [[ -e ~/.profilelocal ]]; then
+  source ~/.profilelocal
+fi
 
-source ~/.profilelocal
+if type direnv > /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
-eval "$(direnv hook zsh)"
