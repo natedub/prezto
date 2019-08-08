@@ -20,6 +20,7 @@ export PIP_REQUIRE_VIRTUALENV=true
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 export EDITOR=vim
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 
 export KEYTIMEOUT=1              # keybind vi defaults to 0.4s delay switching modes, reduce to 0.1
 
@@ -94,3 +95,25 @@ if type direnv > /dev/null; then
   eval "$(direnv hook zsh)"
 fi
 
+if [[ -d "$HOME/.nvm" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  export NODE_VERSIONS="$NVM_DIR/versions/node"
+  export NODE_VERSION_PREFIX=v
+fi
+
+gulp() {
+	"$(npm bin)/gulp" "$@"
+}
+tsc() {
+	"$(npm bin)/tsc" "$@"
+}
+
+httpie() {
+	"$(pyenv root)/versions/httpie/bin/http" "$@"
+}
+
+docker-for-mac() {
+	docker run -it --rm --privileged --pid=host justincormack/nsenter1
+}
